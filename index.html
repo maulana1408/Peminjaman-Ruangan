@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peminjaman Ruangan & Fasilitas | Universitas Airlangga</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-blue: #0A3966;
+            --accent-gold: #D4A325;
+            --bg-light: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --border-color: #E2E8F0;
+            --success-green: #22C55E;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            background-image: url('https://upload.wikimedia.org/wikipedia/id/thumb/b/bf/Lambang_Universitas_Airlangga.ext.png/480px-Lambang_Universitas_Airlangga.ext.png');
+            background-repeat: no-repeat;
+            background-position: center 350px;
+            background-attachment: fixed;
+            background-size: 550px;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(248, 250, 252, 0.94);
+            z-index: -1;
+        }
+
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 24px; }
+
+        /* --- NAVBAR --- */
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 75px;
+        }
+
+        .logo-area { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-graphic {
+            width: 40px; height: 40px;
+            background-color: var(--primary-blue);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 700; border: 2px solid var(--accent-gold);
+        }
+
+        .logo-text h1 { font-size: 1.1rem; font-weight: 700; color: var(--primary-blue); line-height: 1; }
+        .logo-text p { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; }
+
+        .nav-right { display: flex; align-items: center; gap: 16px; }
+
+        .notif-btn {
+            position: relative;
+            background: none; border: 1px solid var(--border-color);
+            width: 38px; height: 38px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: var(--transition); color: var(--text-dark);
+        }
+
+        .notif-btn:hover { background-color: #F1F5F9; border-color: var(--primary-blue); }
+        .notif-badge {
+            position: absolute; top: -1px; right: -1px;
+            background-color: #EF4444; color: white;
+            font-size: 0.6rem; padding: 1px 5px; border-radius: 10px; font-weight: 700;
+        }
+
+        .btn-login {
+            background-color: var(--primary-blue); color: white;
+            padding: 8px 20px; border-radius: var(--radius-sm);
+            text-decoration: none; font-weight: 600; font-size: 0.85rem;
+        }
+
+        .sub-nav { background-color: var(--primary-blue); padding: 8px 0; }
+        .sub-nav-links { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .sub-nav-links a {
+            color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.75rem;
+            font-weight: 500; transition: var(--transition); text-transform: uppercase;
+        }
+        .sub-nav-links a.active, .sub-nav-links a:hover { color: var(--accent-gold); }
+
+        /* --- DASHBOARD HEADER INFO --- */
+        .info-dashboard {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-top: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .info-policy { display: flex; align-items: center; gap: 12px; font-size: 0.85rem; }
+        .info-policy i { color: var(--accent-gold); font-size: 1.5rem; }
+
+        /* --- LAYOUT UTAMA SPLIT --- */
+        .main-layout { display: grid; grid-template-columns: 1fr 340px; gap: 32px; margin-top: 32px; margin-bottom: 60px; }
+
+        @media (max-width: 992px) { .main-layout { grid-template-columns: 1fr; } }
+
+        /* --- SIDEBAR PANEL (KANAN) --- */
+        .sidebar-area { display: flex; flex-direction: column; gap: 24px; }
+        
+        .live-status-widget {
+            background: white; border-radius: var(--radius-md); padding: 20px;
+            border: 1px solid var(--border-color); box-shadow: var(--shadow);
+        }
+
+        .widget-title {
+            font-size: 0.8rem; font-weight: 800; color: var(--primary-blue);
+            margin-bottom: 14px; text-transform: uppercase;
+            border-bottom: 2px solid var(--accent-gold); padding-bottom: 6px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .pulse-icon {
+            width: 8px; height: 8px; background-color: #EF4444; border-radius: 50%;
+            animation: pulse-animation 1.5s infinite;
+        }
+
+        @keyframes pulse-animation {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        /* --- BARU: MODUL VALIDASI OTP & BARCODE (SESUAI GAMBAR REFERENSI) --- */
+        .otp-barcode-widget {
+            background: white; border-radius: var(--radius-md); overflow: hidden;
+            border: 1px solid var(--border-color); box-shadow: var(--shadow);
+        }
+
+        .otp-header {
+            background-color: var(--success-green); color: white;
+            padding: 12px; text-align: center; font-weight: 700;
+            font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+
+        .otp-body { padding: 20px; text-align: center; }
+        .otp-body p { font-size: 0.8rem; color: var(--text-dark); margin-bottom: 16px; line-height: 1.5; }
+        
+        .btn-generate-otp {
+            background-color: var(--success-green); color: white; border: none;
+            width: 100%; padding: 12px; border-radius: var(--radius-sm);
+            font-size: 0.95rem; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: var(--transition); margin-bottom: 16px;
+        }
+        .btn-generate-otp:hover { background-color: #16A34A; }
+
+        .barcode-box {
+            border: 2px dashed var(--border-color); border-radius: var(--radius-sm);
+            padding: 16px; background-color: #F8FAFC; display: flex;
+            flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+        }
+        .barcode-box i { font-size: 3rem; color: #94A3B8; }
+        .barcode-box span { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+
+        .otp-footer-text { font-size: 0.72rem; color: var(--text-muted); margin-top: 14px; line-height: 1.4; text-align: left; border-top: 1px solid #F1F5F9; padding-top: 10px; }
+
+        /* --- KATEGORI RUANGAN (KIRI) --- */
+        .section-container { margin-bottom: 40px; }
+        .section-title {
+            font-size: 1.1rem; color: var(--primary-blue); font-weight: 700;
+            margin-bottom: 16px; border-left: 3px solid var(--accent-gold); padding-left: 10px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .section-title span.quota-info { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; }
+
+        .room-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+        .room-card { background: white; border-radius: var(--radius-sm); border: 1px solid var(--border-color); overflow: hidden; transition: var(--transition); display: flex; flex-direction: column; }
+        .room-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--primary-blue); }
+
+        .room-visual-box { height: 110px; background-color: #F1F5F9; color: #94A3B8; display: flex; align-items: center; justify-content: center; font-size: 2rem; border-bottom: 1px solid var(--border-color); }
+        .room-body { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .room-name { font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+        .room-capacity { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px; }
+        .room-capacity i { margin-right: 4px; color: var(--primary-blue); }
+
+        .room-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #F1F5F9; padding-top: 10px; }
+        .room-status { font-size: 0.72rem; font-weight: 700; color: var(--success-green); }
+        .room-status.occupied { color: #EF4444; }
+
+        .btn-book { background-color: var(--primary-blue); color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: var(--transition); }
+        .btn-book:hover { background-color: #06223F; }
+        .btn-book:disabled { background-color: #CBD5E1; color: #94A3B8; cursor: not-allowed; }
+
+        .live-room-list { display: flex; flex-direction: column; gap: 10px; }
+        .live-room-card { background: #F8FAFC; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; }
+        .live-room-name { font-size: 0.8rem; font-weight: 700; color: var(--text-dark); }
+        .progress-container { display: flex; align-items: center; gap: 10px; font-size: 0.75rem; margin-top: 6px; }
+        .progress-bar-bg { flex: 1; height: 5px; background-color: #E2E8F0; border-radius: 3px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background-color: #EF4444; border-radius: 3px; }
+        .time-remaining { font-weight: 700; color: #EF4444; white-space: nowrap; font-size: 0.7rem; }
+
+        footer { background: var(--primary-blue); color: white; padding: 24px 0; text-align: center; font-size: 0.75rem; border-top: 3px solid var(--accent-gold); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container navbar">
+            <a href="#" class="logo-area">
+                <div class="logo-graphic">UA</div>
+                <div class="logo-text">
+                    <h1>RESERVASI RUANG BELAJAR</h1>
+                    <p>Perpustakaan Universitas Airlangga</p>
+                </div>
+            </a>
+            <div class="nav-right">
+                <button class="notif-btn">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="notif-badge">2</span>
+                </button>
+                <div style="height: 24px; width: 1px; background: var(--border-color);"></div>
+                <a href="#" class="btn-login"><i class="fa-solid fa-user-lock"></i> Member Login</a>
+            </div>
+        </div>
+        <nav class="sub-nav">
+            <div class="container sub-nav-links">
+                <a href="#">Beranda Fasilitas</a>
+                <a href="#" class="active">Peminjaman Ruangan</a>
+                <a href="#">Status Booking Mahasiswa</a>
+                <a href="#">Riwayat Peminjaman</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        
+        <section class="info-dashboard">
+            <div class="info-policy">
+                <i class="fa-solid fa-circle-info"></i>
+                <div>
+                    <strong>Ketentuan Durasi Sesi:</strong> Batas peminjaman ruang adalah <strong>4 Jam per sesi</strong>. Harap lakukan verifikasi Barcode/OTP saat memasuki ruangan.
+                </div>
+            </div>
+            <div><span style="font-size: 0.8rem; color: var(--text-muted);">Status Hari Ini: <strong>Kamis, 25 Juni 2026</strong></span></div>
+        </section>
+
+        <div class="main-layout">
+            
+            <div class="content-area">
+                
+                <section class="section-container">
+                    <div class="section-title">
+                        <h2>RUANG PARTANA (DISKUSI KELOMPOK)</h2>
+                        <span class="quota-info">Total: 4 Ruangan</span>
+                    </div>
+                    <div class="room-grid">
+                        <div class="room-card">
+                            <div class="room-visual-box"><i class="fa-solid fa-users-rectangle"></i></div>
+                            <div class="room-body">
+                                <div><h3 class="room-name">Ruang Partana 1</h3><p class="room-capacity"><i class="fa-solid fa-users"></i> Kapasitas: 6-10 Orang</p></div>
+                                <div class="room-footer"><span class="room-status">Tersedia</span><button class="btn-book">Pesan</button></div>
+                            </div>
+                        </div>
+                        <div class="room-card">
+                            <div class="room-visual-box"><i class="fa-solid fa-users-rectangle"></i></div>
+                            <div class="room-body">
+                                <div><h3 class="room-name">Ruang Partana 2</h3><p class="room-capacity"><i class="fa-solid fa-users"></i> Kapasitas: 6-10 Orang</p></div>
+                                <div class="room-footer"><span class="room-status occupied">Terpakai</span><button class="btn-book" disabled>Penuh</button></div>
+                            </div>
+                        </div>
+                        <div class="room-card">
+                            <div class="room-visual-box"><i class="fa-solid fa-users-rectangle"></i></div>
+                            <div class="room-body">
+                                <div><h3 class="room-name">Ruang Partana 3</h3><p class="room-capacity"><i class="fa-solid fa-users"></i> Kapasitas: 4-6 Orang</p></div>
+                                <div class="room-footer"><span class="room-status">Tersedia</span><button class="btn-book">Pesan</button></div>
+                            </div>
+                        </div>
+                        <div class="room-card">
+                            <div class="room-visual-box"><i class="fa-solid fa-users-rectangle"></i></div>
+                            <div class="room-body">
+                                <div><h3 class="room-name">Ruang Partana 4</h3><p class="room-capacity"><i class="fa-solid fa-users"></i> Kapasitas: 4-6 Orang</p></div>
+                                <div class="room-footer"><span class="room-status occupied">Terpakai</span><button class="btn-book" disabled>Penuh</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section-container">
+                    <div class="section-title">
+                        <h2>RUBELIN (RUANG BELAJAR MANDIRI)</h2>
+                        <span class="quota-info">Total: 8 Ruangan</span>
+                    </div>
+                    <div class="room-grid">
+                        <div class="room-card">
+                            <div class="room-visual-box"><i class="fa-solid fa-user-graduate"></i></div>
+                            <div class="room-body">
+                                <div><h3 class="room-name">Rubelin 1</h3><p class="room-capacity"><i class="fa-solid fa-user"></i> Individu / Mandiri</p></div>
+                                <div class="room-footer"><span class="room-status">Tersedia</span><button class="btn-book">Pesan</button></div>
+                            </div>
+                        </div>
+                        <div class="room-card">
+                            <div class="room-visual-box"><i class="fa-solid fa-user-graduate"></i></div>
+                            <div class="room-body">
+                                <div><h3 class="room-name">Rubelin 2</h3><p class="room-capacity"><i class="fa-solid fa-user"></i> Individu / Mandiri</p></div>
+                                <div class="room-footer"><span class="room-status occupied">Terpakai</span><button class="btn-book" disabled>Penuh</button></div>
+                            </div>
+                        </div>
+                        <div class="room-card">
+                            <div class="room-visual-box"><i class="fa-solid fa-user-graduate"></i></div>
+                            <div class="room-body">
+                                <div><h3 class="room-name">Rubelin 3</h3><p class="room-capacity"><i class="fa-solid fa-user"></i> Individu / Mandiri</p></div>
+                                <div class="room-footer"><span class="room-status">Tersedia</span><button class="btn-book">Pesan</button></div>
+                            </div>
+                        </div>
+                        <div class="room-card">
+                            <div class="room-visual-box"><i class="fa-solid fa-user-graduate"></i></div>
+                            <div class="room-body">
+                                <div><h3 class="room-name">Rubelin 4</h3><p class="room-capacity"><i class="fa-solid fa-user"></i> Individu / Mandiri</p></div>
+                                <div class="room-footer"><span class="room-status occupied">Terpakai</span><button class="btn-book" disabled>Penuh</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <div class="sidebar-area">
+                
+                <div class="otp-barcode-widget">
+                    <div class="otp-header">
+                        <i class="fa-solid fa-lock"></i> OTP & QR Code Akses
+                    </div>
+                    <div class="otp-body">
+                        <p>Klik tombol di bawah untuk menghasilkan OTP baru sebagai bukti sewa ruangan aktif Anda.</p>
+                        <button class="btn-generate-otp">
+                            <i class="fa-solid fa-bolt"></i> Generate OTP / Barcode
+                        </button>
+                        <div class="barcode-box">
+                            <i class="fa-solid fa-barcode"></i>
+                            <span>Barcode Bukti Penyewaan</span>
+                        </div>
+                        <div class="otp-footer-text">
+                            Modul OTP saat ini masih dalam tahap uji coba (beta test) dan sedang diuji untuk proses peminjaman: <strong>Rubelin dan Ruang Partana</strong> di perpustakaan Kampus B.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="live-status-widget">
+                    <h3 class="widget-title"><div class="pulse-icon"></div> Live Sisa Waktu Ruang</h3>
+                    <div class="live-room-list">
+                        <div class="live-room-card">
+                            <div class="live-room-name">Ruang Partana 2</div>
+                            <div class="progress-container">
+                                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 75%;"></div></div>
+                                <span class="time-remaining"><i class="fa-regular fa-clock"></i> 1 Jam Sisa</span>
+                            </div>
+                        </div>
+                        <div class="live-room-card">
+                            <div class="live-room-name">Rubelin 2</div>
+                            <div class="progress-container">
+                                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 50%;"></div></div>
+                                <span class="time-remaining" style="color: #D4A325;"><i class="fa-regular fa-clock"></i> 2 Jam Sisa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Universitas Airlangga Ruang Belajar & Fasilitas Mandiri System.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
